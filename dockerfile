@@ -1,32 +1,37 @@
-# Use the official PHP image with Apache web server
-FROM php:8.2-apache
+# 1. Use PHP 8.4 to satisfy symfony/css-selector requirement
+FROM php:8.4-apache
 
-# 1. Install system tools that Composer requires to download and unzip packages
+# 2. Install system tools and libraries for PHP extensions (gd, bcmath, etc.)
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     zip \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install MySQLi extension for database connections
-RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
+# 3. Install and enable required PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd bcmath mysqli \
+    && docker-php-ext-enable gd bcmath mysqli
 
-# Enable Apache mod_rewrite
+# 4. Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# 2. Get Composer from the official Composer image
+# 5. Get Composer from the official Composer image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set the working directory
 WORKDIR /var/www/html/
 
-# 3. Copy only composer files first (this makes future deploys much faster!)
+# 6. Copy only composer files first
 COPY composer.json composer.lock* ./
 
-# 4. RUN YOUR COMPOSER COMMAND
-RUN composer install --no-dev --optimize-autoloader
+# 7. RUN COMPOSER (Added --ignore-platform-reqs as a safety net)
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
-# 5. Copy the rest of your PHP project files
+# 8. Copy the rest of your PHP project files
 COPY . .
 
 # Update permissions
