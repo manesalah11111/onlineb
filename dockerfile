@@ -13,21 +13,29 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd bcmath mysqli pdo_mysql
 
-# --- THE FIX ---
+# --- THE FIX: Explicit Apache Configuration to stop redirect loops ---
 RUN a2enmod rewrite
 RUN echo '<VirtualHost *:80>\n\
     DocumentRoot /var/www/html/public\n\
+    DirectoryIndex index.php\n\
     <Directory /var/www/html/public>\n\
-        Options Indexes FollowSymLinks\n\
+        Options FollowSymLinks\n\
         AllowOverride All\n\
         Require all granted\n\
+        RewriteEngine On\n\
+        RewriteBase /\n\
+        RewriteCond %{REQUEST_FILENAME} !-f\n\
+        RewriteCond %{REQUEST_FILENAME} !-d\n\
+        RewriteRule ^ index.php [L]\n\
     </Directory>\n\
 </VirtualHost>' > /etc/apache2/sites-available/000-default.conf
-# ----------------
+
+# Set environment variable for trusted proxies (Fixes HTTPS redirect loops)
+ENV TRUSTED_PROXIES="*"
 
 WORKDIR /var/www/html
 
-# Copy files
+# Copy project files
 COPY . .
 
 # Install Composer
