@@ -7,7 +7,7 @@ chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Run migration
 echo "Running migrations..."
-php artisan migrate --force
+# php artisan migrate --force
 
 # Remove the config:cache command that is causing the crash
 # We will skip it for now to get the site live
