@@ -41,3 +41,19 @@ Route::any('/revoke', function () {
 Route::post('/reset-password', [NewPasswordController::class, 'store'])
     ->middleware(['guest:' . config('fortify.guard')])
     ->name('password.update');
+
+Route::get('/up-db', function () {
+    try {
+        \DB::connection()->getPdo();
+        return response('OK', 200);
+    } catch (\Exception $e) {
+        return response('Database Connection Failed', 500);
+    }
+});
+
+Route::get('/clear-cache', function() {
+    \Artisan::call('route:clear');
+    \Artisan::call('config:clear');
+    \Artisan::call('cache:clear');
+    return "Cache cleared successfully!";
+});
