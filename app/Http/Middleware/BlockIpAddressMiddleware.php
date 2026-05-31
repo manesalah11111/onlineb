@@ -17,14 +17,22 @@ class BlockIpAddressMiddleware
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
-    {
+{
+    try {
+        // Wrap the DB call in a try-catch
         $ipaddress = DB::table('ipaddresses')->pluck('ipaddress');
         $iparrays = $ipaddress->toArray();
         $userip = $request->ip();
-        //dd($userip);
+
         if (in_array($userip, $iparrays)) {
              abort(403, "You are restricted to access the site.");
         }
-        return $next($request);
+    } catch (\Exception $e) {
+        // If DB is down, Log the error and ALLOW the request to pass.
+        // Better for the site to be open than for it to be 500-down.
+        \Log::error('BlockIpMiddleware DB Error: ' . $e->getMessage());
     }
+
+    return $next($request);
+}
 }
