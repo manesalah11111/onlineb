@@ -1,6 +1,6 @@
 {{--
     Expects:
-    - $support_route: Route name for support page
+    - $support_route: Route name for support page (optional fallback)
 --}}
 <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl shadow-lg dark:shadow-gray-900/50 overflow-hidden border border-white/20 dark:border-gray-700/50 relative">
     <!-- Gradient Background -->
@@ -39,7 +39,7 @@
                 </div>
                 <div>
                     <p class="text-xs font-bold text-slate-900 dark:text-slate-50">Quick Response</p>
-                    <p class="text-xs text-slate-600 dark:text-slate-400">< 5 minutes</p>
+                    <p class="text-xs text-slate-600 dark:text-slate-400">&lt; 5 minutes</p>
                 </div>
             </div>
             <div class="flex items-center p-2 bg-white/60 dark:bg-gray-700/60 rounded-xl border border-slate-100/50 dark:border-gray-600/70">
@@ -55,12 +55,13 @@
         
         <!-- Action Button -->
         <div class="flex justify-center">
-            <a href="{{ $support_route }}" 
-               class="group inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold rounded-xl shadow-lg shadow-primary-500/25 dark:shadow-primary-900/50 hover:shadow-primary-500/40 dark:hover:shadow-primary-800/50 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-sm">
+            <button type="button" 
+               onclick="openLiveChat(event)"
+               class="group inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold rounded-xl shadow-lg shadow-primary-500/25 dark:shadow-primary-900/50 hover:shadow-primary-500/40 dark:hover:shadow-primary-800/50 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 text-sm cursor-pointer">
                 <i class="fa-solid fa-comments text-xs mr-2 group-hover:animate-bounce"></i>
                 <span>Start Live Chat</span>
                 <div class="ml-2 w-1.5 h-1.5 bg-white/80 rounded-full group-hover:bg-white transition-colors duration-300"></div>
-            </a>
+            </button>
         </div>
         
         <!-- Additional Info -->
@@ -76,3 +77,15 @@
     <div class="absolute top-2 right-2 w-8 h-8 bg-primary-200/30 dark:bg-gray-700/30 rounded-full blur-xl"></div>
     <div class="absolute bottom-2 left-2 w-6 h-6 bg-primary-300/20 dark:bg-gray-600/20 rounded-full blur-lg"></div>
 </div>
+
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/6a5e77471c52dc1d4c7ee99e/1ju0g3sto';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
